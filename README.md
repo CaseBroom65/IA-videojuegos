@@ -1,1 +1,2 @@
-# IA-videojuegos
+# IA-proyecto
+ Proyecto inteligencia Artificial
