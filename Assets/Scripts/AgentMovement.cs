@@ -8,6 +8,11 @@ public class AgentMovement : MonoBehaviour
     // Forward es la dirección hacie el frente del GameObject que sea dueño de este script.
     public Vector3 MovementDirection = Vector3.forward;
 
+    public Vector3 GravityForce = Vector3.up * -9.81f;
+
+    public Vector3 Velocity = Vector3.zero;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,10 +41,42 @@ public class AgentMovement : MonoBehaviour
     // 1000/60 = 16.666... milisegundos.
     void Update()
     {
+        // CUADRO 1 DE ACTUALIZACIÓN
+
+        // qué cambio causa el tener una aceleración?
+        // la aceleración incrementa la velocidad. Cuánto la incrementa? 
+        // pues la magnitud de esa aceleración cada segundo.
+        Velocity += GravityForce * Time.deltaTime;
+
+        // si deltatime = 16ms
+        // 0, 0, 0 += (0, -9.8, 0) * 0.016s;
+        // 0, 0, 0, += (0, -.1568, 0)
+
+        //Ahí ya aplicamos aceleración a la velocidad.
+        // ahora toca aplicar la velocidad a la posición.
+        transform.position += Velocity * Time.deltaTime;
+
+        // si delta time = 16ms = 0.016s
+        // (0, 0, 0) += (0, -.1568, 0) * 0.016s;
+        // (0, -0.0025088, 0)
+
+        // ACÁ HAREMOS CUADRO 2 DE ACTUALIZACIÓN
+
+        // aplicar aceleración a la velocidad
+        // si deltatime = 0.025s = 25ms
+        // 0, -.1568, 0 += (0, -9.8, 0) * 0.025s;
+        // 0, -.1568, 0, += (0, -.245, 0)
+        // 0, -.4018, 0  VELOCIDAD AL FINAL DEL CUADRO 2
+
+        // aplicamos velocidad a la posición:
+        // (0, -0.0025088, 0) += (0, -.4018, 0) * .025s
+        // (0, -0.0025088, 0) += (0, -.01, 0) 
+
+
         // Qué dice esta línea de código?
         // transform.position es la posición del GameObject dueño de este script.
         // súmale a la posición de ese gameobject la dirección de movimiento.
-        transform.position += MovementDirection * Time.deltaTime;
+        // transform.position += MovementDirection * Time.deltaTime;
 
         // considerar velocidad
 
@@ -50,8 +87,6 @@ public class AgentMovement : MonoBehaviour
     void OnDrawGizmos()
     {
         MovementDirection = MovementDirection.normalized;
-        Gizmos.DrawLine(transform.position, transform.position + MovementDirection * 1f);
+        Gizmos.DrawLine(transform.position, transform.position + MovementDirection * 10000f);
     }
 }
-
-
