@@ -347,6 +347,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/AgentMovement.cs"
 "Assets/Scripts/AgentSenses.cs"
+"Assets/Scripts/PursuitTarget.cs"
 "Assets/Scripts/SteeringBehaviors.cs"
 -langversion:9.0
 

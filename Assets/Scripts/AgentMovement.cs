@@ -1,92 +1,80 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AgentMovement : MonoBehaviour
+public class Guard : MonoBehaviour
 {
-    // Forward es la dirección hacie el frente del GameObject que sea dueño de este script.
-    public Vector3 MovementDirection = Vector3.forward;
+    public float viewDistance = 10f; // Distancia del cono de visión
+    public float viewAngle = 45f; // Ángulo del cono de visión
+    public LayerMask targetMask; // Máscara para los objetivos que el guardia puede ver
+    public LayerMask obstacleMask; // Máscara para los obstáculos que pueden bloquear la visión
+    public float rotationInterval = 5f; // Intervalo de tiempo entre cada rotación
+    public float rotationAngle = 45f; // Ángulo de rotación
+    private Transform infiltrator; // Referencia al infiltrador
+    private bool isAlert = false; // Estado de alerta del guardia
 
-    public Vector3 GravityForce = Vector3.up * -9.81f;
-
-    public Vector3 Velocity = Vector3.zero;
-
-
-    // Start is called before the first frame update
     void Start()
     {
-        // normalizamos el vector de MovementDirection para estar 100% seguros de que es una dirección normalizada.
-        //
-        if (MovementDirection.magnitude == 0.0f)
+        infiltrator = GameObject.FindWithTag("Infiltrator")?.transform;
+        if (infiltrator == null)
         {
-            // Entonces no podemos normalizarlo. 
-            // Aquí imprimiríamos un error y abortaríamos el programa.
-            Debug.LogError("ERROR, se trató de normalizar un vector 0");
+            Debug.LogError("Infiltrator no encontrado. Asegúrate de que el infiltrador tenga la etiqueta 'Infiltrator'.");
         }
         else
         {
-            // Si su magnitud no es 0, entonces sí se puede normalizar.
-            MovementDirection = MovementDirection.normalized;
+            StartCoroutine(RotateGuard());
         }
-
-
     }
 
-    // Update is called once per frame
-    // cuántas veces se ejecuta la función update cada segundo?
-    // Depende.
-    // 60 FPS
-    // 1000 milisegundos, si queremos 60 FPS, pues dividimos 1000 entre 60.
-    // 1000/60 = 16.666... milisegundos.
     void Update()
     {
-        // CUADRO 1 DE ACTUALIZACIÓN
+        if (infiltrator != null && CanSeeTarget(infiltrator))
+        {
+            isAlert = true;
+            // Aquí puedes agregar comportamiento adicional para el estado de alerta
+            Debug.Log("Guardia en estado de alerta!");
+        }
+    }
 
-        // qué cambio causa el tener una aceleración?
-        // la aceleración incrementa la velocidad. Cuánto la incrementa? 
-        // pues la magnitud de esa aceleración cada segundo.
-        Velocity += GravityForce * Time.deltaTime;
-
-        // si deltatime = 16ms
-        // 0, 0, 0 += (0, -9.8, 0) * 0.016s;
-        // 0, 0, 0, += (0, -.1568, 0)
-
-        //Ahí ya aplicamos aceleración a la velocidad.
-        // ahora toca aplicar la velocidad a la posición.
-        transform.position += Velocity * Time.deltaTime;
-
-        // si delta time = 16ms = 0.016s
-        // (0, 0, 0) += (0, -.1568, 0) * 0.016s;
-        // (0, -0.0025088, 0)
-
-        // ACÁ HAREMOS CUADRO 2 DE ACTUALIZACIÓN
-
-        // aplicar aceleración a la velocidad
-        // si deltatime = 0.025s = 25ms
-        // 0, -.1568, 0 += (0, -9.8, 0) * 0.025s;
-        // 0, -.1568, 0, += (0, -.245, 0)
-        // 0, -.4018, 0  VELOCIDAD AL FINAL DEL CUADRO 2
-
-        // aplicamos velocidad a la posición:
-        // (0, -0.0025088, 0) += (0, -.4018, 0) * .025s
-        // (0, -0.0025088, 0) += (0, -.01, 0) 
-
-
-        // Qué dice esta línea de código?
-        // transform.position es la posición del GameObject dueño de este script.
-        // súmale a la posición de ese gameobject la dirección de movimiento.
-        // transform.position += MovementDirection * Time.deltaTime;
-
-        // considerar velocidad
-
-        // considerar aceleración.
-        // VelocidadActual = aceleraciónDeGravedad*Time.deltaTime;
+    IEnumerator RotateGuard()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(rotationInterval);
+            if (!isAlert)
+            {
+                transform.Rotate(Vector3.up, rotationAngle);
+            }
+        }
     }
 
     void OnDrawGizmos()
     {
-        MovementDirection = MovementDirection.normalized;
-        Gizmos.DrawLine(transform.position, transform.position + MovementDirection * 10000f);
+        Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward * viewDistance;
+        Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward * viewDistance;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, leftBoundary);
+        Gizmos.DrawRay(transform.position, rightBoundary);
+
+        // Dibujar un arco para representar el cono de visión
+        Gizmos.DrawWireSphere(transform.position, viewDistance);
+        Gizmos.color = new Color(1, 0, 0, 0.2f);
+        Gizmos.DrawSphere(transform.position, viewDistance);
+    }
+
+    public bool CanSeeTarget(Transform target)
+    {
+        if (target == null) return false;
+
+        Vector3 dirToTarget = (target.position - transform.position).normalized;
+        if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+        {
+            float dstToTarget = Vector3.Distance(transform.position, target.position);
+            if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

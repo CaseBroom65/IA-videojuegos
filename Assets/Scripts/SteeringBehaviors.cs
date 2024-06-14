@@ -1,89 +1,292 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Dynamic;
-using System.Numerics;
-using Unity.VisualScripting;
 using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
 
 public class SteeringBehaviors : MonoBehaviour
 {
-    // Velocidad máxima a la que nuestro personaje puede ir.
-    // sirve para decirle a la aceleración que ya no incremente más la velocidad.
-    // PREGUNTA: ¿De qué tipo de variable debería ser nuestra velocidad máxima y por qué?
-    // float, porque únicamente necesitamos limitar la magnitud, sin importar la dirección.
+    public enum GuardState
+    {
+        Normal,
+        Alert,
+        Attack
+    };
+
+    public GuardState CurrentState = GuardState.Normal;
+
+    public enum SteeringBehaviorType
+    {
+        Seek = 0,
+        Flee,
+        Pursuit,
+        Evade,
+        SeekTheMouse,
+        Arrive,
+        Wander,
+        MAX
+    };
+
+    public SteeringBehaviorType CurrentBehavior = SteeringBehaviorType.Seek;
+
     public float MaxSpeed = 20.0f;
-
-    // La magnitud de la fuerza que le vamos a aplicar al rigidbody.
     public float Force = 10.0f;
+    public float AlertDuration = 5.0f; // Duration for which the guard stays in alert state
+    public float AttackVisionTime = 1.0f; // Total time the infiltrator needs to be in vision for attack state
 
-    // una referencia al Rigidbody component que tiene nuestro GameObject en el editor.
     public Rigidbody rb;
     public AgentSenses Senses;
+    public Rigidbody EnemyRigidbody;
+    public float ToleranceRadius = 1.0f;
+    public float ObstacleAvoidanceRadius = 5.0f; // Radius for obstacle avoidance
 
+    private Vector3 initialPosition;
+    private Vector3 lastSeenPosition;
+    private Vector3 MouseWorldPos = Vector3.zero;
+    private Vector3 WanderTargetPosition = Vector3.zero;
 
-    // Start is called before the first frame update
+    private float alertTimer = 0.0f;
+    private float visionTimer = 0.0f;
+
+    void Awake()
+    {
+        Init();
+        EnemyRigidbody = GameObject.Find("Infiltrator").GetComponent<Rigidbody>();
+    }
+
     void Start()
+    {
+        initialPosition = transform.position;
+    }
+
+    protected void Init()
     {
         rb = GetComponent<Rigidbody>();
         Senses = GetComponent<AgentSenses>();
-        // rb = GetComponent<CapsuleCollider>();
-        // rb = GetComponent<MeshRenderer>();
-        // Component.Destroy(rb);  // si destruyéramos el componente rigidbody aquí en el código, también
-        // lo estaríamos borrando del GameObject que lo tiene asignado en el editor.
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Si hacemos este cambio a la variable RB, se verá reflejado en el editor
-        //rb.angularDrag = rb.angularDrag + 0.01f;
+        MouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        MouseWorldPos.z = transform.position.z;
 
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPos.z = transform.position.z;
+        bool MouseIsInRange = Senses.TargetIsInRange(MouseWorldPos);
 
-        bool MouseIsInRange = Senses.TargetIsInRange(mouseWorldPos);
-
-        // Algo así deberían de poder hacer con su tarea del cono de visión.
-        // bool MouseIsInVisionCone = Senses.TargetIsInVisionCone(mouseWorldPos);
-
-
-        if (MouseIsInRange)
+        if (CurrentState == GuardState.Alert || CurrentState == GuardState.Normal)
         {
-            Debug.Log("El mouse sí está en rango");
-            // Si ya la puede "ver" o sentir, pues ya debería poder reaccionar ante ello., En este caso, perseguirlo.
-
-            // para perseguir a alguien, nos tenemos que mover en la dirección en la que están ellos, respecto a nuestra posición.
-            Vector3 DesiredDirection = mouseWorldPos - transform.position;
-            // Ahorita queremos solo la dirección, entonces guardamos la normalización de dicho vector.
-            Vector3 DesiredDirectionNormalized = DesiredDirection.normalized;
-
-            // Una fuerza de magnitud = Force (que es una variable de esta clase), multiplicado por la dirección deseada
-            // (que es la variable DesiredDirectionNormalized que tenemos aquí arribita).
-
-            rb.AddForce(DesiredDirectionNormalized * -1.0f * Force, ForceMode.Acceleration);
-
-            // Ahora necesitamos limitar velocidad, para que no supere a la máxima velocidad (MaxSpeed).
-            // Checamos la magnitud de la velocidad.
-            // si esa magnitud es mayor que la MaxSpeed, entonces hay que limitarlo
-            if (rb.velocity.magnitude > MaxSpeed)
+            bool targetInVision = Senses.TargetIsInVisionCone(EnemyRigidbody.position);
+            if (targetInVision)
             {
-                // cómo le dirían: sigues yendo en la misma dirección, pero tu magnitud es distinta.
-                // Qué estamos tratando de cambiar? queremos cambiar la velocidad de nuestro rigidbody (es decir, rb.velocity)
-                // la queremos limitar a que su magnitud sea la de nuestra velocidad máxima
-                rb.velocity = rb.velocity.normalized * MaxSpeed;  // la misma dirección de movimiento, pero con la magnitud del límite que le ponemos (MaxSpeed)
+                lastSeenPosition = EnemyRigidbody.position;
+                if (CurrentState == GuardState.Alert)
+                {
+                    visionTimer += Time.deltaTime;
+                    if (visionTimer >= AttackVisionTime)
+                    {
+                        CurrentState = GuardState.Attack;
+                        visionTimer = 0.0f;
+                    }
+                }
+                else
+                {
+                    CurrentState = GuardState.Alert;
+                    alertTimer = 0.0f;
+                }
             }
-
+            else if (CurrentState == GuardState.Alert)
+            {
+                alertTimer += Time.deltaTime;
+                if (alertTimer >= AlertDuration)
+                {
+                    CurrentState = GuardState.Normal;
+                    alertTimer = 0.0f;
+                }
+            }
         }
-        else
+    }
+
+    void FixedUpdate()
+    {
+        if (EnemyRigidbody == null)
+            return;
+
+        Vector3 currentSteeringForce = Vector3.zero;
+
+        switch (CurrentBehavior)
         {
-            Debug.Log("El mouse NO está en rango");
-            rb.AddForce(rb.velocity.normalized * -1.0f * Force, ForceMode.Acceleration);
+            case SteeringBehaviorType.Seek:
+                currentSteeringForce = Seek(EnemyRigidbody.position);
+                break;
+            case SteeringBehaviorType.Flee:
+                currentSteeringForce = Flee(EnemyRigidbody.position);
+                break;
+            case SteeringBehaviorType.Pursuit:
+                currentSteeringForce = Pursuit(EnemyRigidbody.position, EnemyRigidbody.velocity);
+                break;
+            case SteeringBehaviorType.Evade:
+                currentSteeringForce = Evade(EnemyRigidbody.position, EnemyRigidbody.velocity);
+                break;
+            case SteeringBehaviorType.SeekTheMouse:
+                currentSteeringForce = Seek(MouseWorldPos);
+                break;
+            case SteeringBehaviorType.Arrive:
+                currentSteeringForce = Arrive(MouseWorldPos, 5.0f);
+                break;
+            case SteeringBehaviorType.Wander:
+                currentSteeringForce = WanderNaive();
+                break;
         }
 
+        currentSteeringForce += SemiObstacleAvoidance();
 
+        currentSteeringForce = Vector3.ClampMagnitude(currentSteeringForce, Force);
+        rb.AddForce(currentSteeringForce, ForceMode.Acceleration);
 
+        if (CurrentState == GuardState.Alert)
+        {
+            if (!InsideToleranceRadius(lastSeenPosition))
+            {
+                CurrentBehavior = SteeringBehaviorType.Seek;
+            }
+            else
+            {
+                CurrentState = GuardState.Normal;
+                CurrentBehavior = SteeringBehaviorType.Wander;
+            }
+        }
+        else if (CurrentState == GuardState.Normal)
+        {
+            if (!InsideToleranceRadius(initialPosition))
+            {
+                CurrentBehavior = SteeringBehaviorType.Seek;
+            }
+            else
+            {
+                CurrentBehavior = SteeringBehaviorType.Wander;
+            }
+        }
+        else if (CurrentState == GuardState.Attack)
+        {
+            // Implement attack behavior here
+        }
+    }
 
+    Vector3 SemiObstacleAvoidance()
+    {
+        Vector3 avoidanceForce = Vector3.zero;
+
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, ObstacleAvoidanceRadius);
+
+        foreach (Collider col in hitColliders)
+        {
+            if (col.CompareTag("Obstacle"))
+            {
+                Vector3 obstaclePosition = col.transform.position;
+                Vector3 avoidanceDirection = transform.position - obstaclePosition;
+                avoidanceDirection.Normalize();
+
+                float distanceToObstacle = avoidanceDirection.magnitude;
+                float fleeRadius = 2.0f; // Radius for activating Flee behavior
+
+                if (distanceToObstacle < fleeRadius)
+                {
+                    avoidanceForce += avoidanceDirection * MaxSpeed;
+                }
+            }
+        }
+
+        return avoidanceForce;
+    }
+
+    protected bool InsideToleranceRadius(Vector3 targetPosition)
+    {
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        if (distance < ToleranceRadius)
+        {
+            rb.velocity = Vector3.zero;
+            return true;
+        }
+        return false;
+    }
+
+    protected Vector3 WanderNaive()
+    {
+        if (InsideToleranceRadius(WanderTargetPosition))
+        {
+            float x = Random.Range(-1.0f, 1.0f);
+            float z = Random.Range(-1.0f, 1.0f);
+            Vector3 randomDirection = new Vector3(x, 0.0f, z).normalized;
+            WanderTargetPosition = transform.position + (randomDirection * 15.0f);
+        }
+        return Arrive(WanderTargetPosition, 5.0f);
+    }
+
+    protected Vector3 Arrive(Vector3 targetPosition, float SlowDownRadius)
+    {
+        Vector3 desiredDirection = targetPosition - transform.position;
+        Vector3 desiredDirectionNormalized = desiredDirection.normalized;
+        float distance = Vector3.Distance(transform.position, targetPosition);
+        if (InsideToleranceRadius(targetPosition))
+        {
+            return Vector3.zero;
+        }
+        Vector3 desiredVelocity = desiredDirectionNormalized * MaxSpeed;
+        if (distance < SlowDownRadius)
+        {
+            desiredVelocity *= distance / SlowDownRadius;
+        }
+        Vector3 steeringForce = desiredVelocity - rb.velocity;
+        return steeringForce;
+    }
+
+    protected Vector3 Evade(Vector3 targetPosition, Vector3 targetCurrentVelocity)
+    {
+        return -Pursuit(targetPosition, targetCurrentVelocity);
+    }
+
+    protected Vector3 Pursuit(Vector3 targetPosition, Vector3 targetCurrentVelocity)
+    {
+        float timeToReachTargetPosition = (targetPosition - transform.position).magnitude / MaxSpeed;
+        Vector3 predictedTargetPosition = targetPosition + targetCurrentVelocity * timeToReachTargetPosition;
+        return Seek(predictedTargetPosition);
+    }
+
+    protected Vector3 Flee(Vector3 targetPosition)
+    {
+        return -Seek(targetPosition);
+    }
+
+    protected Vector3 Seek(Vector3 targetPosition)
+    {
+        Vector3 desiredDirection = targetPosition - transform.position;
+        Vector3 desiredDirectionNormalized = desiredDirection.normalized;
+        Vector3 steeringForce = desiredDirectionNormalized * MaxSpeed;
+        return steeringForce - rb.velocity;
+    }
+
+    void OnDrawGizmos()
+    {
+        if (EnemyRigidbody != null)
+        {
+            float timeToReachTargetPosition = (EnemyRigidbody.position - transform.position).magnitude / MaxSpeed;
+            Vector3 predictedTargetPosition = EnemyRigidbody.position + EnemyRigidbody.velocity * timeToReachTargetPosition;
+
+            Gizmos.color = UnityEngine.Color.yellow;
+            Gizmos.DrawSphere(predictedTargetPosition, 1.0f);
+        }
+
+        if (rb != null)
+        {
+            Gizmos.DrawLine(transform.position, rb.velocity * 10000);
+        }
+
+        Gizmos.color = UnityEngine.Color.green;
+        Gizmos.DrawSphere(WanderTargetPosition, 1.0f);
+
+        DrawObstacleAvoidanceGizmos();
+    }
+
+    void DrawObstacleAvoidanceGizmos()
+    {
+        Gizmos.color = UnityEngine.Color.red;
+        Gizmos.DrawWireSphere(transform.position, ObstacleAvoidanceRadius);
     }
 }
