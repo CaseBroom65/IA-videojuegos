@@ -2,48 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PursuitTarget : MonoBehaviour
+public class WaypointMover : MonoBehaviour
 {
-    public float arriveRadius = 1.0f; // Radio para considerar que ha llegado al objetivo
-    public float Force = 10.0f; // Fuerza del movimiento
+    public List<Transform> waypoints; // List to store waypoint positions
+    public float arriveRadius = 1.0f; // Radius for considering waypoint reached
+    public float force = 10.0f; // Movement force
+
     private Rigidbody rb;
-    private Vector3 targetPosition;
+    private int currentWaypointIndex = 0; // Index of the current waypoint
     private bool isMoving = false;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        targetPosition = transform.position; // Inicialmente el objetivo es la posición actual
     }
 
     void Update()
     {
-        if (isMoving)
+        if (waypoints.Count > 0 && isMoving) // Check for waypoints and movement state
         {
+            Vector3 targetPosition = waypoints[currentWaypointIndex].position;
             Vector3 direction = targetPosition - transform.position;
+
             if (direction.magnitude < arriveRadius)
             {
+                currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Count; // Loop to next waypoint
+                if (currentWaypointIndex == 0 && waypoints.Count > 1) // Check for cycle completion
+                {
+                    // Optional: Implement action for completing the cycle (e.g., animation)
+                }
                 isMoving = false;
-                rb.velocity = Vector3.zero; // Detener el movimiento
+                rb.velocity = Vector3.zero; // Stop on reaching waypoint
             }
             else
             {
                 Vector3 arriveVector = Arrive(targetPosition);
-                rb.AddForce(arriveVector * Force, ForceMode.Acceleration);
+                rb.AddForce(arriveVector * force, ForceMode.Acceleration);
             }
         }
     }
 
-    void OnMouseDown()
-    {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 10.0f; // Ajuste de profundidad para la cámara
-        targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-        isMoving = true; // Comenzar a moverse hacia el objetivo
-    }
-
     Vector3 Arrive(Vector3 target)
     {
+        // Existing Arrive function (no modification needed)
         Vector3 desiredVelocity = target - transform.position;
         float distance = desiredVelocity.magnitude;
         float speed = rb.velocity.magnitude;
@@ -58,9 +59,21 @@ public class PursuitTarget : MonoBehaviour
         return steering;
     }
 
-    void OnDrawGizmos()
+    public void AddWaypoint(Transform waypoint) // Function to add waypoints
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(targetPosition, 1.0f);
+        waypoints.Add(waypoint);
+    }
+
+    public void RemoveWaypoint(Transform waypoint) // Function to remove waypoints
+    {
+        waypoints.Remove(waypoint);
+    }
+
+    public void StartMoving() // Function to initiate movement along waypoints
+    {
+        if (waypoints.Count > 0)
+        {
+            isMoving = true;
+        }
     }
 }
