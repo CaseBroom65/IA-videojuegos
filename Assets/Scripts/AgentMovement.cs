@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Guard : MonoBehaviour
+public class AgentMovement : MonoBehaviour
 {
     public float viewDistance = 10f; // Distancia del cono de visión
     public float viewAngle = 45f; // Ángulo del cono de visión
@@ -14,6 +14,7 @@ public class Guard : MonoBehaviour
 
     void Start()
     {
+        // Encuentra el infiltrador en la escena usando su etiqueta
         infiltrator = GameObject.FindWithTag("Infiltrator")?.transform;
         if (infiltrator == null)
         {
@@ -21,6 +22,7 @@ public class Guard : MonoBehaviour
         }
         else
         {
+            // Inicia la rutina de rotación del guardia
             StartCoroutine(RotateGuard());
         }
     }
@@ -29,7 +31,7 @@ public class Guard : MonoBehaviour
     {
         if (infiltrator != null && CanSeeTarget(infiltrator))
         {
-            isAlert = true;
+            isAlert = true; // El guardia entra en estado de alerta
             // Aquí puedes agregar comportamiento adicional para el estado de alerta
             Debug.Log("Guardia en estado de alerta!");
         }
@@ -39,9 +41,11 @@ public class Guard : MonoBehaviour
     {
         while (true)
         {
+            // Espera el intervalo de rotación
             yield return new WaitForSeconds(rotationInterval);
             if (!isAlert)
             {
+                // Rota el guardia si no está en estado de alerta
                 transform.Rotate(Vector3.up, rotationAngle);
             }
         }
@@ -49,6 +53,7 @@ public class Guard : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        // Dibuja los límites del cono de visión
         Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward * viewDistance;
         Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward * viewDistance;
 
@@ -56,12 +61,13 @@ public class Guard : MonoBehaviour
         Gizmos.DrawRay(transform.position, leftBoundary);
         Gizmos.DrawRay(transform.position, rightBoundary);
 
-        // Dibujar un arco para representar el cono de visión
+        // Dibuja un arco para representar el cono de visión
         Gizmos.DrawWireSphere(transform.position, viewDistance);
         Gizmos.color = new Color(1, 0, 0, 0.2f);
         Gizmos.DrawSphere(transform.position, viewDistance);
     }
 
+    // Función para verificar si el guardia puede ver al objetivo
     public bool CanSeeTarget(Transform target)
     {
         if (target == null) return false;
@@ -72,9 +78,9 @@ public class Guard : MonoBehaviour
             float dstToTarget = Vector3.Distance(transform.position, target.position);
             if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
             {
-                return true;
+                return true; // El objetivo está dentro del cono de visión y no hay obstáculos
             }
         }
-        return false;
+        return false; // El objetivo está fuera del cono de visión o hay obstáculos
     }
 }
