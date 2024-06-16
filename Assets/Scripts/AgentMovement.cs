@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class AgentMovement : MonoBehaviour
 {
+    //En el tutorial de Unity "IA básica en Unity" https://learn.unity.com/course/artificial-intelligence-for-beginners
+    //Se utilizo chat para la busqueda de información.
     public float viewDistance = 10f; // Distancia del cono de visión
     public float viewAngle = 45f; // Ángulo del cono de visión
     public LayerMask targetMask; // Máscara para los objetivos que el guardia puede ver

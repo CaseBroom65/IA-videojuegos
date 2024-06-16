@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SteeringBehaviors : MonoBehaviour
 {
+    //citios Steering Behaviors Tutorial from Unity Learn: https://www.youtube.com/watch?app=desktop&v=tIfC00BE6z8
+    //Steering Behaviors in Game Design:  https://webdocs.cs.ualberta.ca/~games/299/Gamasutra.pdf
+    //Steering Behaviors in Unity with the Behavior Designer https://www.youtube.com/watch?v=BXrsPpHOxtM
+
+
     // Enum para los estados de la guardia
     public enum GuardState
     {
@@ -338,5 +343,6 @@ public class SteeringBehaviors : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(WanderTargetPosition, 1.0f); // Dibuja una esfera en la posición objetivo de wander
+
     }
 }

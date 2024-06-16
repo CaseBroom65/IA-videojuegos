@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AgentSenses : MonoBehaviour
+//canal de youtube para un poco de programación de unity https://www.youtube.com/c/SebastianLague
+//Se utilizo chat para la busqueda de información.
+
 {
     public float VisionRange = 10.0f; // Rango de visión del agente
     public float VisionAngle = 45.0f; // Ángulo de visión en grados

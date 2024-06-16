@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PursuitTarget : MonoBehaviour
 {
+    //En el tutorial de Unity "Pathfinding con NavMesh" https://www.youtube.com/watch?v=tFpv4xFZrq8
+    //Se utilizo chat para la busqueda de información.
     public List<Transform> waypoints; // Lista para almacenar posiciones de waypoints
     public float arriveRadius = 1.0f; // Radio para considerar que se ha llegado a un waypoint
     public float force = 10.0f; // Fuerza de movimiento
