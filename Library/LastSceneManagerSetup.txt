@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/Examen_1 patrullague.unity
+- path: Assets/Scenes/Examen_1 Attack.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
