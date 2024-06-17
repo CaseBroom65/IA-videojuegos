@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "D:\\unity\\IA proyecto\\IA-videojuegos\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|d:\\unity\\ia proyecto\\ia-videojuegos\\assets\\scripts\\agentsenses.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\agentsenses.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|d:\\unity\\ia proyecto\\ia-videojuegos\\assets\\scripts\\steeringbehaviourspatrullaje.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\steeringbehaviourspatrullaje.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|D:\\unity\\IA proyecto\\IA-videojuegos\\assets\\scripts\\agentmovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\agentmovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|d:\\unity\\ia proyecto\\ia-videojuegos\\assets\\scripts\\steeringbehaviors.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\steeringbehaviors.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|D:\\unity\\IA proyecto\\IA-videojuegos\\assets\\scripts\\pursuittarget.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\pursuittarget.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|D:\\unity\\IA proyecto\\IA-videojuegos\\assets\\scripts\\steeringbehaviors.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\steeringbehaviors.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|D:\\unity\\IA proyecto\\IA-videojuegos\\assets\\scripts\\agentsenses.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\agentsenses.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|D:\\unity\\IA proyecto\\IA-videojuegos\\assets\\scripts\\agentmovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{879676C8-A37A-35CA-BB07-625B29092189}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\agentmovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,13 +38,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "steeringBehaviourspatrullaje.cs",
+              "DocumentMoniker": "D:\\unity\\IA proyecto\\IA-videojuegos\\Assets\\Scripts\\steeringBehaviourspatrullaje.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\steeringBehaviourspatrullaje.cs",
+              "ToolTip": "D:\\unity\\IA proyecto\\IA-videojuegos\\Assets\\Scripts\\steeringBehaviourspatrullaje.cs*",
+              "RelativeToolTip": "Assets\\Scripts\\steeringBehaviourspatrullaje.cs*",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADAAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-17T00:28:29.792Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "SteeringBehaviors.cs",
               "DocumentMoniker": "D:\\unity\\IA proyecto\\IA-videojuegos\\Assets\\Scripts\\SteeringBehaviors.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\SteeringBehaviors.cs",
               "ToolTip": "D:\\unity\\IA proyecto\\IA-videojuegos\\Assets\\Scripts\\SteeringBehaviors.cs",
               "RelativeToolTip": "Assets\\Scripts\\SteeringBehaviors.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
+              "ViewState": "AQIAAE0BAAAAAAAAAAAUwFwBAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-13T22:17:24.012Z",
               "EditorCaption": ""
@@ -53,14 +70,13 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\PursuitTarget.cs",
               "ToolTip": "D:\\unity\\IA proyecto\\IA-videojuegos\\Assets\\Scripts\\PursuitTarget.cs",
               "RelativeToolTip": "Assets\\Scripts\\PursuitTarget.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAA2AAAA",
+              "ViewState": "AQIAAE0AAAAAAAAAAAAqwAcAAAA2AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-13T22:17:09.216Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-13T22:17:09.216Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "AgentMovement.cs",
               "DocumentMoniker": "D:\\unity\\IA proyecto\\IA-videojuegos\\Assets\\Scripts\\AgentMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\AgentMovement.cs",
@@ -68,12 +84,11 @@
               "RelativeToolTip": "Assets\\Scripts\\AgentMovement.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-03T06:44:17.377Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-03T06:44:17.377Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "AgentSenses.cs",
               "DocumentMoniker": "D:\\unity\\IA proyecto\\IA-videojuegos\\Assets\\Scripts\\AgentSenses.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\AgentSenses.cs",
@@ -81,8 +96,7 @@
               "RelativeToolTip": "Assets\\Scripts\\AgentSenses.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAA5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-03T06:35:20.576Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-03T06:35:20.576Z"
             }
           ]
         }
