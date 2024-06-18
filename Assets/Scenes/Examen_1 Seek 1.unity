@@ -389,7 +389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentState: 0
-  CurrentBehavior: 0
+  CurrentBehavior: 1
   MaxSpeed: 10
   Force: 10
   AlertDuration: 5
@@ -400,6 +400,7 @@ MonoBehaviour:
   EnemyRigidbody: {fileID: 680854449}
   ToleranceRadius: 1
   ObstacleAvoidanceRadius: 5
+  FleeDistance: 10
 --- !u!1 &680854443
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +417,7 @@ GameObject:
   - component: {fileID: 680854448}
   m_Layer: 0
   m_Name: Infiltrator
-  m_TagString: Player
+  m_TagString: Infiltrator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -492,7 +493,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 680854443}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.49, y: 1.97, z: 0}
+  m_LocalPosition: {x: -3.39, y: 10.93, z: 0}
   m_LocalScale: {x: 3.7181208, y: 3.7181208, z: 3.7181208}
   m_ConstrainProportionsScale: 0
   m_Children: []

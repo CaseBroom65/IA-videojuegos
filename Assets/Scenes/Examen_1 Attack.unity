@@ -413,7 +413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1748fef02e0565444ab4a7dec121cf85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSpeed: 20
+  MaxSpeed: 5
   Force: 10
   AttackDuration: 5
   rb: {fileID: 627541226}
@@ -434,7 +434,7 @@ GameObject:
   - component: {fileID: 680854448}
   m_Layer: 0
   m_Name: Infiltrator
-  m_TagString: Player
+  m_TagString: Infiltrator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -510,7 +510,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 680854443}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.49, y: 1.97, z: 0}
+  m_LocalPosition: {x: 6.92, y: 5.4, z: 0}
   m_LocalScale: {x: 3.7181208, y: 3.7181208, z: 3.7181208}
   m_ConstrainProportionsScale: 0
   m_Children: []

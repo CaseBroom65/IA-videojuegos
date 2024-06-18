@@ -213,7 +213,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 287052697}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.98, y: 0.06, z: 0}
+  m_LocalPosition: {x: -5.98, y: 2.02, z: 0}
   m_LocalScale: {x: 4.26, y: 4.26, z: 4.26}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -416,7 +416,7 @@ GameObject:
   - component: {fileID: 680854448}
   m_Layer: 0
   m_Name: Infiltrator
-  m_TagString: Player
+  m_TagString: Infiltrator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

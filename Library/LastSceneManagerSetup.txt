@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/Examen_1 Attack.unity
+- path: Assets/Scenes/Examen_1 Seek 1.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

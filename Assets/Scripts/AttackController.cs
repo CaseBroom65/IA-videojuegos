@@ -2,6 +2,7 @@ using System.Collections;  // Necesario para IEnumerator y WaitForSeconds
 using System.Collections.Generic;  // No se utiliza en este script pero está presente por defecto
 using UnityEngine;  // Necesario para trabajar con elementos de Unity
 
+
 public class AttackController : MonoBehaviour
 {
     public float MaxSpeed = 20.0f;  // Velocidad máxima del guardia en ataque
@@ -11,6 +12,7 @@ public class AttackController : MonoBehaviour
 
     public Rigidbody rb;  // Rigidbody del guardia
     public Rigidbody EnemyRigidbody;  // Rigidbody del enemigo/infiltrador
+    //public GameObject Infiltrator;
 
     void FixedUpdate()
     {
@@ -53,9 +55,20 @@ public class AttackController : MonoBehaviour
         if (InsideToleranceRadius(EnemyRigidbody.position))
         {
             // Supone que el infiltrador tiene un método para manejar su destrucción
-            // infiltrator.DestroyInfiltrator();
+            //GameObject.FindGameObjectsWithTag("infiltrator");
+            //GameObject.Destroy(Infiltrator);
+            //Debug.Log("que pedo ");
+            //OnCollisionEnter(Infiltrator);
+
         }
     }
+    //public void OnCollisionEnter(Collision collision)
+    //{
+    //    if(collision.transform ==EnemyRigidbody) 
+    //    {
+    //        Destroy(EnemyRigidbody.gameObject);
+    //    }
+    //}
 
     // Método para volver a la posición inicial (lógica no implementada)
     private void ReturnToInitialPosition()

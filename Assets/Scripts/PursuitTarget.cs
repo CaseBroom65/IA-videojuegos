@@ -85,7 +85,7 @@ public class PursuitTarget : MonoBehaviour
     // Método para destruir el infiltrador
     public void DestroyInfiltrator()
     {
-        gameObject.SetActive(false); // Desactiva el objeto
+        Destroy(rb); // Desactiva el objeto
     }
 
     // Método para reaparecer el infiltrador en una posición dada

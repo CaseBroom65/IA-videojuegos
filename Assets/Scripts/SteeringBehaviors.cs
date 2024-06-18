@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class SteeringBehaviors : MonoBehaviour
 {
-    //citios Steering Behaviors Tutorial from Unity Learn: https://www.youtube.com/watch?app=desktop&v=tIfC00BE6z8
-    //Steering Behaviors in Game Design:  https://webdocs.cs.ualberta.ca/~games/299/Gamasutra.pdf
-    //Steering Behaviors in Unity with the Behavior Designer https://www.youtube.com/watch?v=BXrsPpHOxtM
-
-
     // Enum para los estados de la guardia
     public enum GuardState
     {
         Normal,
         Alert,
-        Attack
+        Attack,
+        Fleeing // Nuevo estado de huida
     };
 
     public GuardState CurrentState = GuardState.Normal;
@@ -45,6 +41,7 @@ public class SteeringBehaviors : MonoBehaviour
     public Rigidbody EnemyRigidbody; // Rigidbody del enemigo
     public float ToleranceRadius = 1.0f; // Radio de tolerancia para llegar a un objetivo
     public float ObstacleAvoidanceRadius = 5.0f; // Radio para evitar obstáculos
+    public float FleeDistance = 10.0f; // Distancia a la que comienza a huir del infiltrador
 
     private Vector3 initialPosition; // Posición inicial del agente
     private Vector3 lastSeenPosition; // Última posición vista del enemigo
@@ -129,6 +126,20 @@ public class SteeringBehaviors : MonoBehaviour
                 }
             }
         }
+
+        // Nuevo estado de huida
+        if (infiltrator != null && !infiltratorDestroyed)
+        {
+            float distanceToInfiltrator = Vector3.Distance(transform.position, EnemyRigidbody.position);
+            if (distanceToInfiltrator < FleeDistance)
+            {
+                CurrentState = GuardState.Fleeing; // Cambia al estado de huida
+            }
+            else if (CurrentState == GuardState.Fleeing)
+            {
+                CurrentState = GuardState.Normal; // Cambia al estado normal si está fuera de la distancia de huida
+            }
+        }
     }
 
     void FixedUpdate()
@@ -206,6 +217,10 @@ public class SteeringBehaviors : MonoBehaviour
             {
                 ReturnToInitialPosition(); // Regresa a la posición inicial después de la duración del ataque
             }
+        }
+        else if (CurrentState == GuardState.Fleeing)
+        {
+            CurrentBehavior = SteeringBehaviorType.Flee; // Cambia a Flee cuando está en el estado de huida
         }
     }
 

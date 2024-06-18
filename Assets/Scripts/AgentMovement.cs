@@ -27,6 +27,7 @@ public class AgentMovement : MonoBehaviour
             // Inicia la rutina de rotación del guardia
             StartCoroutine(RotateGuard());
         }
+        
     }
 
     void Update()
